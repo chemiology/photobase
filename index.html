@@ -7,7 +7,7 @@
     window.dataLayer = window.dataLayer || [];
     function gtag(){dataLayer.push(arguments);}
     gtag('js', new Date());
-    gtag('config', 'G-XXXXXXX');
+    gtag('config', 'G-GFE8N54J03');
   </script>
 
   <base target="_top">
@@ -221,6 +221,17 @@ btn.addEventListener("click", function () {
     end: document.getElementById("end").value
   };
 
+  // 🔥 검색 이벤트 추적
+  if (typeof gtag === "function") {
+    gtag('event', 'search', {
+      search_artist: params.artist || '',
+      search_title: params.title || '',
+      search_venue: params.venue || '',
+      search_region: params.region || '',
+      search_period: params.period || ''
+    });
+  }
+
   const key = JSON.stringify(params);
   lastParams = params;
 
@@ -267,6 +278,18 @@ function render(res, reset){
 
   const box = document.getElementById("result");
   const countEl = document.getElementById("count");
+
+  if (typeof gtag === "function") {
+    gtag('event', 'load_more', {
+      offset: currentOffset
+    });
+  }
+
+  if (reset && typeof gtag === "function") {
+    gtag('event', 'search_result', {
+      result_count: res.total
+    });
+  }
 
   // ⭐ 기존 버튼 제거
   const oldBtn = document.getElementById("loadMoreBtn");
