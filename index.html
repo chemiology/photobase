@@ -1,10 +1,296 @@
 <!DOCTYPE html>
 <html>
 <head>
+  <base target="_top">
   <meta charset="utf-8">
-  <script>
-    location.href = "https://script.google.com/macros/s/AKfycbxBfW0E9S1VkkzX2GSXr4Pfk_5jBS0jSaqXJSjYLxZ4GBB_4tRyvzGf5xeiXP18T4WS/exec";
-  </script>
+
+  <style>
+    body {
+      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: linear-gradient(180deg, #eaf4ff, #ffffff);
+    }
+
+    .wrapper {
+      max-width: 920px;
+      margin: 60px auto;
+      padding: 36px;
+      background: #fff;
+      border-radius: 16px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+    }
+
+    h2 {
+      font-size: 26px;
+      margin-bottom: 8px;
+    }
+
+    .version {
+      font-size: 12px;
+      color: #aaa;
+      margin-bottom: 20px;
+    }
+
+    .section {
+      margin-bottom: 18px;
+    }
+
+    .filters {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    input, select {
+      padding: 8px 10px;
+      border: 1px solid #ddd;
+      border-radius: 6px;
+    }
+
+    button {
+      padding: 10px 18px;
+      background: #4da3ff;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 500;
+    }
+
+    button:hover {
+      background: #2f8cff;
+    }
+
+    #status {
+      margin-left: 10px;
+      color: #888;
+    }
+
+    .desc-box {
+      margin-top: 20px;
+      padding: 20px;
+      background: #f5f9ff;
+      border-radius: 10px;
+      font-size: 15px;
+      color: #444;
+    }
+
+    .desc-title {
+      font-weight: bold;
+      font-size: 16px;
+      margin-bottom: 10px;
+    }
+
+    /* 🔥 간격 최적화 */
+    .desc-box p {
+      margin: 6px 0;
+      line-height: 1.5;
+    }
+
+    #count {
+      margin: 20px 0;
+      font-weight: bold;
+    }
+
+    .card {
+      padding: 16px;
+      margin-bottom: 12px;
+      border-radius: 10px;
+      background: #fafafa;
+      transition: all 0.2s;
+      border: 1px solid #eee;
+    }
+
+    .card:hover {
+      background: #f0f7ff;
+      transform: translateY(-2px);
+    }
+
+    .title {
+      font-weight: 600;
+      font-size: 16px;
+      margin-bottom: 4px;
+    }
+
+    .meta {
+      font-size: 13px;
+      color: #666;
+      line-height: 1.6;
+    }
+  </style>
 </head>
-<body></body>
+
+<body>
+
+<div class="wrapper">
+
+  <h2>Photo Base 전시 검색</h2>
+  <div class="version">v2026 FINAL</div>
+
+  <div class="section filters">
+    <label><input type="radio" name="period" value="" checked> 미선택</label>
+    <label><input type="radio" name="period" value="today"> 오늘의 전시</label>
+    <label><input type="radio" name="period" value="week"> 이주의 전시</label>
+    <label><input type="radio" name="period" value="month"> 이달의 전시</label>
+  </div>
+
+  <div class="section">
+    지역:
+    <select id="region">
+      <option value="">전체</option>
+      <option>서울</option><option>경기</option><option>부산</option>
+      <option>대구</option><option>인천</option><option>대전</option>
+      <option>울산</option><option>광주</option><option>세종</option>
+      <option>강원</option><option>충북</option><option>충남</option>
+      <option>경북</option><option>경남</option><option>전북</option>
+      <option>전남</option><option>제주</option><option>온라인</option>
+    </select>
+  </div>
+
+  <div class="section">
+    <input id="artist" placeholder="작가">
+    <input id="title" placeholder="전시 제목">
+    <input id="venue" placeholder="전시장">
+  </div>
+
+  <div class="section">
+    기간:
+    <input type="date" id="start">
+    ~
+    <input type="date" id="end">
+  </div>
+
+  <div class="section">
+    <button id="searchBtn">검색</button>
+    <span id="status"></span>
+  </div>
+
+  <!-- 안내문 유지 + 구조 개선 -->
+  <div class="desc-box">
+    <div class="desc-title">…Photo Base 사용방법…</div>
+
+    <p>Photo Base 전시 검색은 2016년 중반부터 국내에서 개최된 사진 전시 정보를 구축해 온 데이터베이스로, 현재에도 지속적으로 업데이트되고 있습니다.</p>
+
+    <p>전시 제목이나 작가명, 전시장소와 전시 기간이 확인되는 모든 사진 전시를 포함하고 있으며,
+    ‘오늘의 전시’, ‘이주의 전시’, ‘이달의 전시’를 선택한 뒤
+    (필요한 경우 지역을 함께 선택하여) 검색하시면 됩니다.</p>
+
+    <p>또한 작가명, 전시 제목, 전시장, 기간 등을 조합하여 검색할 수 있습니다.
+    다만 <b>기간 검색은 작가, 전시 제목, 전시장 중 하나 이상을 입력한 경우에만</b> 사용하실 수 있습니다.</p>
+
+  </div>
+
+  <div id="count"></div>
+  <div id="result"></div>
+
+</div>
+
+<script>
+
+const statusEl = document.getElementById("status");
+const btn = document.getElementById("searchBtn");
+
+statusEl.innerText = "검색어를 입력하고 검색 버튼을 눌러주세요.";
+
+/* 🔥 상태 관리 */
+let currentOffset = 0;
+let lastParams = null;
+let cache = {};
+
+/* 🔥 검색 */
+btn.addEventListener("click", function () {
+
+  currentOffset = 0;
+
+  const params = {
+    artist: document.getElementById("artist").value.trim(),
+    title:  document.getElementById("title").value.trim(),
+    venue:  document.getElementById("venue").value.trim(),
+    region: document.getElementById("region").value,
+    period: document.querySelector('input[name="period"]:checked').value,
+    start: document.getElementById("start").value,
+    end: document.getElementById("end").value
+  };
+
+  const key = JSON.stringify(params);
+  lastParams = params;
+
+  const box = document.getElementById("result");
+  const countEl = document.getElementById("count");
+
+  box.innerHTML = "검색 중...";
+  countEl.innerText = "";
+
+  if (cache[key]) {
+    render(cache[key], true);
+    return;
+  }
+
+fetch("https://script.google.com/macros/s/AKfycbxDozMEORDtVd69MOhDIcUnn2Nocemh4UYB6WbRK1T4Cn8UBZ9cp8HNTlClEnSuc6Ke/exec?api=search&" + new URLSearchParams({...params, offset:0, limit:50}))
+  .then(res => res.json())
+  .then(function(res){
+    cache[key] = res;
+    render(res, true);
+  });
+});
+
+/* 🔥 더보기 */
+function loadMore(){
+
+  const btn = document.getElementById("loadMoreBtn");
+
+  if (btn) {
+    btn.innerText = "검색 중...";
+    btn.disabled = true;
+  }
+
+  currentOffset += 50;
+
+fetch("https://script.google.com/macros/s/AKfycbxDozMEORDtVd69MOhDIcUnn2Nocemh4UYB6WbRK1T4Cn8UBZ9cp8HNTlClEnSuc6Ke/exec?api=search&" + new URLSearchParams({...lastParams, offset: currentOffset, limit:50}))
+  .then(res => res.json())
+  .then(function(res){
+    render(res, false);
+  });
+}
+
+/* 🔥 렌더링 */
+function render(res, reset){
+
+  const box = document.getElementById("result");
+  const countEl = document.getElementById("count");
+
+  // ⭐ 기존 버튼 제거
+  const oldBtn = document.getElementById("loadMoreBtn");
+  if (oldBtn) oldBtn.remove();
+
+  if(reset){
+    box.innerHTML = "";
+    countEl.innerText = `검색 결과 ${res.total}건`;
+  }
+
+  const html = res.data.map(d => `
+    <div class="card">
+      <div class="title">${d.title}</div>
+      <div class="meta">
+        ${d.venue} (${d.region})<br>
+        ${d.start} ~ ${d.end}<br>
+        ${d.artist}
+      </div>
+    </div>
+  `).join("");
+
+  box.innerHTML += html;
+
+  if (currentOffset + 50 < res.total) {
+    box.innerHTML += `
+      <div style="text-align:center; margin:20px;">
+        <button id="loadMoreBtn" onclick="loadMore()">더보기</button>
+      </div>
+    `;
+  }
+}
+
+</script>
+
+</body>
 </html>
